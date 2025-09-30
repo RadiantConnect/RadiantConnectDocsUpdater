@@ -53,7 +53,7 @@
 			new (
 				ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\ValorantApi",
 				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\api\valorant-api",
-				MethodType: MethodHandler.MethodType.ExternalSystem
+				MethodType: MethodHandler.MethodType.ValorantApi
 			),
 			new (
 				ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\Network\ValorantNet.cs",

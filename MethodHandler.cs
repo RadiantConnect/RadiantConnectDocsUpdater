@@ -166,6 +166,7 @@ namespace RadiantConnectDocsUpdater
 				if (fileName == "logservice") fileName = "../services/logservice";
 				if (fileName == "net") fileName = "../services/valorantnet";
 				if (fileName == "initiator") fileName = "rconnect";
+				if (ValorantApiRoutes.TryGetValue(key, out _)) fileName = $"valorant-api/{fileName}";
 
 				await File.WriteAllTextAsync($"{_directoryBinds[0].OutputPath}\\{fileName}.md", value.ToString()[..^2]);
 			}
@@ -308,7 +309,11 @@ namespace RadiantConnectDocsUpdater
 		{
 			string basePath = method.Namespace[(method.Namespace.LastIndexOf('.') + 1)..].ToLowerInvariant();
 			basePath = basePath.Replace("endpoints", "", StringComparison.OrdinalIgnoreCase);
-			basePath = $"data-types/{basePath}.md";
+
+			basePath = method.Namespace.Contains(".ValorantApi.", StringComparison.OrdinalIgnoreCase) 
+				? $"data-types/valorant-api/{basePath}.md" 
+				: $"data-types/{basePath}.md";
+
 			return basePath;
 		}
 	}
