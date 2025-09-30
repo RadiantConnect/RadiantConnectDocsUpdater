@@ -25,7 +25,8 @@ namespace RadiantConnectDocsUpdater
 			{ "object", "https://learn.microsoft.com/en-us/dotnet/api/system.object" },
 			{ "void", "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types" },
 			{ "task", "https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task" },
-			{ "t", "https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/generics" }
+			{ "t", "https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/generics" },
+			{ "dynamic", "https://learn.microsoft.com/en-us/dotnet/csharp/advanced-topics/interop/using-type-dynamic" }
 		};
 
 		private static readonly List<Method> Methods = [];
@@ -139,6 +140,7 @@ namespace RadiantConnectDocsUpdater
 			foreach (Method method in Methods)
 			{
 				string stringBuilderName = method.Namespace[(method.Namespace.LastIndexOf('.') + 1)..];
+				stringBuilderName = char.ToUpper(stringBuilderName[0]) + stringBuilderName[1..];
 
 				if (!stringBuilderBind.TryGetValue(stringBuilderName, out StringBuilder? sb))
 				{
@@ -146,7 +148,7 @@ namespace RadiantConnectDocsUpdater
 
 					stringBuilderBind[stringBuilderName].AppendLine($"# {stringBuilderName}");
 					stringBuilderBind[stringBuilderName].AppendLine();
-					stringBuilderBind[stringBuilderName].AppendLine($"Access via: {method.Namespace}\n\n");
+					stringBuilderBind[stringBuilderName].AppendLine($"Access via: `{method.Namespace}`\n\n");
 
 					sb = stringBuilderBind[stringBuilderName];
 				}
@@ -201,7 +203,7 @@ namespace RadiantConnectDocsUpdater
 					if (!routes.TryGetValue(className, out string? route))
 						continue;
 
-					MatchCollection methodMatches = Matches(fileData, $@"public{(staticClass ? @"\s+static" : "")}\s+async\s+Task(?:<([\w?<>,\s]+)>)?\s+(\w+)(?:<([\w\s,<>?]+)>)?\s*\(([^)]*)\)", RegexOptions.IgnorePatternWhitespace);
+					MatchCollection methodMatches = Matches(fileData, $@"public{(staticClass ? @"\s+static" : "")}\s+(?:async\s+)?Task(?:<([\w?<>,\s]+)>)?\s+(\w+)(?:<([\w\s,<>?]+)>)?\s*\(([^)]*)\)", RegexOptions.IgnorePatternWhitespace);
 
 					foreach (Match methodMatch in methodMatches)
 					{
@@ -258,7 +260,7 @@ namespace RadiantConnectDocsUpdater
 
 			StringBuilder markdown = new();
 
-			markdown.AppendLine($"---\n\n## {recordName}\n");
+			markdown.AppendLine($"---\n\n## {recordName}\n\n**Parameters:**\n");
 
 
 			markdown.AppendLine("""
@@ -282,7 +284,12 @@ namespace RadiantConnectDocsUpdater
 				markdown.AppendLine($"| `{type}` | {name} | {(type.Contains('?') ? "true" : "false")} |");
 			}
 
-			markdown.AppendLine("");
+			markdown.AppendLine("\n**Return Value:**\n");
+
+			markdown.AppendLine("""
+			                    |  Return Type     | Nullable | Docs Source |
+			                    |-----------------|----------|-------------|
+			                    """);
 
 			string typeReturn = method.ReturnType;
 
@@ -291,13 +298,9 @@ namespace RadiantConnectDocsUpdater
 				string dataTypeLocation = 
 					_csTypes.TryGetValue(typeReturn.ToLowerInvariant().Replace("?", ""), out string? link) ?
 						link : 
-						GetDataLoc(method);
+						GetDataLoc(method, typeReturn);
 
-				markdown.AppendLine($"""
-				                     |  Return Type     | Nullable | Docs Source |
-				                     |-----------------|----------|-------------|
-				                     | `{typeReturn}` | {(typeReturn.Contains('?') ? "true" : "false")}      | [{typeReturn.Replace("<", "&lt;").Replace(">","&gt;")}]({dataTypeLocation}) |
-				                     """);
+				markdown.AppendLine($"| `{typeReturn}` | {(typeReturn.Contains('?') ? "true" : "false")}      | [{typeReturn.Replace("<", "&lt;").Replace(">","&gt;")}]({dataTypeLocation}) |");
 			}
 				
 			markdown.AppendLine("");
@@ -305,14 +308,22 @@ namespace RadiantConnectDocsUpdater
 			return markdown.ToString();
 		}
 
-		private static string GetDataLoc(Method method)
+		private static string GetDataLoc(Method method, string typeReturn)
 		{
 			string basePath = method.Namespace[(method.Namespace.LastIndexOf('.') + 1)..].ToLowerInvariant();
 			basePath = basePath.Replace("endpoints", "", StringComparison.OrdinalIgnoreCase);
 
+			if (basePath == "initiator")
+				basePath = "rconnect";
+			
+			if (typeReturn.Contains('<'))
+				typeReturn = typeReturn[(typeReturn.IndexOf('<') + 1)..typeReturn.LastIndexOf('>')];
+
+			string pageHash = typeReturn.Replace("?", "").ToLowerInvariant();
+	
 			basePath = method.Namespace.Contains(".ValorantApi.", StringComparison.OrdinalIgnoreCase) 
-				? $"data-types/valorant-api/{basePath}.md" 
-				: $"data-types/{basePath}.md";
+				? $"../../data-types/valorant-api/{basePath}.md#{pageHash}" 
+				: $"../data-types/{basePath}.md#{pageHash}";
 
 			return basePath;
 		}

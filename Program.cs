@@ -47,27 +47,27 @@
 		[
 			new (
 				ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\Network",
-				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\api",
+				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectSite\Docs\C#\docs\api",
 				MethodType: MethodHandler.MethodType.Endpoint
 			),
 			new (
 				ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\ValorantApi",
-				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\api\valorant-api",
+				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectSite\Docs\C#\docs\api\valorant-api",
 				MethodType: MethodHandler.MethodType.ValorantApi
 			),
-			new (
-				ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\Network\ValorantNet.cs",
-				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\api",
-				MethodType: MethodHandler.MethodType.ExternalSystem
-			),
-			new (
-				ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\Services\LogService.cs",
-				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\services",
-				MethodType: MethodHandler.MethodType.ExternalSystem
-			),
+			//new (
+			//	ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\Network\ValorantNet.cs",
+			//	OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\api",
+			//	MethodType: MethodHandler.MethodType.ExternalSystem
+			//),
+			//new (
+			//	ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\Services\LogService.cs",
+			//	OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\services",
+			//	MethodType: MethodHandler.MethodType.ExternalSystem
+			//),
 			new (
 				ClassLocation: @"C:\Users\Riis\Documents\GitHub\RadiantConnect\RConnect",
-				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectDocsUpdater\bin\Debug\net8.0\docs\services",
+				OutputPath: @"C:\Users\Riis\Documents\GitHub\RadiantConnectSite\Docs\C#\docs\api",
 				MethodType: MethodHandler.MethodType.RConnect
 			)
 		];
